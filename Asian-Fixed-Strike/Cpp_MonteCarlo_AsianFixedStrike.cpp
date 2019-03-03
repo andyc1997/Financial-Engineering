@@ -14,11 +14,11 @@ double priceCpp(double s0, double sigma, double r, double T, double K, double th
 
     for (int j = 0; j < trials; j++){
         for(int i = 0; i < m; i++){
-            ds = r*stockProcess[i]*dt + sqrt(volProcess[i])*stockProcess[i]*sqrt(dt)*R::rnorm(0.0,1.0);
-            dnu = kappa*(theta - volProcess[i])*dt + xi*sqrt(volProcess[i])*sqrt(dt)*R::rnorm(0.0,1.0);
+            ds = r*stockProcess[i]*dt + sqrt(volProcess[i])*stockProcess[i]*sqrt(dt)*R::rnorm(0.0, 1.0);
+            dnu = kappa*(theta - volProcess[i])*dt + xi*sqrt(volProcess[i])*sqrt(dt)*R::rnorm(0.0, 1.0);
             stockProcess[i + 1] = stockProcess[i] + ds;
             volProcess[i + 1] = std::max(volProcess[i] + dnu, 0.0);
-        }
+        } 
         payoff[j] = std::max(mean(stockProcess) - K, 0.0);
     }
     return exp(-r*T)*mean(payoff);
