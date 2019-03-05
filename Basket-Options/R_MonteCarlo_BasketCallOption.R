@@ -49,8 +49,7 @@ for(j in 1:d){
 )
 cat("Option Price Estimate:", f %>% mean %>% round(4), "\n")
 
-# Vectorization, performance: 0s
-system.time(
+# Vectorization, performance: 0.36s
 call.price <- function(){
   r1 <- (r-1/2*AAPL.vol^2)*t + sqrt(t)*corr.normal[1, 1:d]
   r2 <- (r-1/2*GOOG.vol^2)*t + sqrt(t)*corr.normal[2, 1:d]
@@ -58,5 +57,6 @@ call.price <- function(){
   s2.c <- s2[1]*exp(r2)
   return(exp(-r*t)*pmax(rowMeans(matrix(c(s1.c, s2.c), ncol = 2)) - K, 0)) # Call payoff
 }
-)
+system.time(
 cat("Option Price Estimate:", call.price() %>% mean %>% round(4), "\n")
+)
