@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-//Using Monte Carlo simulation & Heston model to price of AsianFixedStrike
+//Using Monte Carlo simulation & Heston model to price Asian Fixed Strike call
 //[[Rcpp::export]]
 double priceCpp(double s0, double sigma, double r, double T, double K, double theta, double kappa, double xi, int trials){
     int m = 252*T;
