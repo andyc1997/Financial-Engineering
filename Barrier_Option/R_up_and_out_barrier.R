@@ -1,13 +1,11 @@
 # Parameter Estimates
 r <- 0.02
 sigma <- 0.4
-
 K <- 100
 T <- 0.5
-
 s <- seq(from = 70, to = 200, length.out = 50)
 
-# Functions
+# Pricing functions
 payoff.call <- function(s, K){
   return(max(s - K, 0))
 }
@@ -38,6 +36,7 @@ price.up.and.out <- function(s, t, L){
   return(price)
 }
 
+# Graph
 # Investigate how price of barrier option changes over different barrier, L.
 price.cal.up.and.out <- sapply(s, price.up.and.out, t = 0, L = 190)
 
