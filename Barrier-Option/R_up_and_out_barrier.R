@@ -22,6 +22,7 @@ price.cash.or.nothing.call <- function(s, t, K){
 }
 
 price.up.and.out <- function(s, t, L){
+  # Reiner and Rubinstein (1991) Analytical solution to single barrier option
   if (s >= L){
     price <- 0
   } else {
