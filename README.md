@@ -4,3 +4,4 @@ List:
 2. Optimize the code for pricing Basket call option using vectorization instead of calling C++.
 3. Price Equity link instruments/notes (ELI) by Monte Carlo methods in R.
 4. Price Single Barrier option by analytical formula.
+5. Price Employee Share Options by binomial tree using VBA.
