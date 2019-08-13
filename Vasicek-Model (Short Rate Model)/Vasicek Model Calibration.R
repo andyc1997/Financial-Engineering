@@ -1,3 +1,4 @@
+# DRAFT MODEL
 # The following code demonstrate the clibration of parameters of Vasicek model (One factor short rate model)
 # True parameters in simulation
 dt <- 0.25 # Time steps
