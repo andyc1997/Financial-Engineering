@@ -8,7 +8,7 @@ sapply(interest.rate.data, class) # Check data types
 
 interest.rate.data$Date <- as.Date(unlist(interest.rate.data$Date), '%d/%m/%Y')
 
-# Ordinary Least Square (OLS) Estimation
+# 1. Ordinary Least Square (OLS) Estimation
 # Vasicek model SDE can be discretized as an AR(1) Process in finite time
 row.count <- nrow(interest.rate.data)
 interest.rate.data$HIBOR.lag <- c(NA, interest.rate.data$HIBOR[1:row.count - 1])
@@ -16,10 +16,21 @@ interest.rate.data$HIBOR.lag <- c(NA, interest.rate.data$HIBOR[1:row.count - 1])
 reg.lm <- lm(HIBOR ~ HIBOR.lag, data = interest.rate.data)
 summary(reg.lm) # Show regression output
 
-a <- reg.lm$coefficients[2]
-b <- reg.lm$coefficients[1]
+a <- as.numeric(reg.lm$coefficients[2])
+b <- as.numeric(reg.lm$coefficients[1])
 res.var <- var(reg.lm$residuals)
 dt <- 1/252
+
+# 2. Maximum Likelihood Estimation (MLE) # Current progress
+loss.func <- function(parameters){
+  mu <- parameters[1]
+  lambda <- parameters[2]
+  sigma <- parameters[3]
+  sum.one <- row.count/2*log(2*pi*sigma^2*dt)
+  sum.sec <- sum((-diff(interest.rate.data$HIBOR, 1) - lambda*(mu - interest.rate.data$HIBOR[2:row.count])*dt)^2)
+  return(sum.one + sum.sec/(2*sigma^2)*dt)
+}
+opt.sol <- optim(c(1, 1, 1), loss.func)
 
 # SDE Parameters calibrated by OLS
 mu <- b/(1 - a)
