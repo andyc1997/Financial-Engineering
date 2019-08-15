@@ -5,4 +5,4 @@ List:
 3. Price Equity link instruments/notes (ELI) by Monte Carlo methods in R.
 4. Price Single Barrier option by analytical formula.
 5. Price Employee Share Options by binomial tree using VBA.
-6. Calibrate the parameters of stochastic differential equation (SDE) of Vasicek model in R by OLS and MLE.
+6. Calibrate the parameters of stochastic differential equation (SDE) of Vasicek model in R by Least square method.
