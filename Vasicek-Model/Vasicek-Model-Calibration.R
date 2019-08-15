@@ -1,4 +1,8 @@
-# DRAFT MODEL
+# MODEL
+# Purpose: Simulate stochastic interest rate for European style options based on a well-known model.
+# Theory: Vasicek, O. (1977). An equilibrium characterization of the term structure.
+# Calibration: van den Berg, T. (2011). Calibrating the ornstein-uhlenbeck (vasicek) model. 
+
 # The following code demonstrate the clibration of parameters of Vasicek model (One factor short rate model)
 # HIBOR data from HSB
 setwd('C:\\Users\\user\\Documents\\Programming\\Note on R\\Vasicek Model_Calibration')
@@ -10,6 +14,7 @@ interest.rate.data$Date <- as.Date(unlist(interest.rate.data$Date), '%d/%m/%Y')
 
 # 1. Ordinary Least Square (OLS) Estimation
 # Vasicek model SDE can be discretized as an AR(1) Process in finite time
+# One can also use arima(interest.rate.data$HIBOR, c(1, 0, 0)) for simplicity.
 row.count <- nrow(interest.rate.data)
 interest.rate.data$HIBOR.lag <- c(NA, interest.rate.data$HIBOR[1:row.count - 1])
 
@@ -21,17 +26,6 @@ b <- as.numeric(reg.lm$coefficients[1])
 res.var <- var(reg.lm$residuals)
 dt <- 1/252
 
-# 2. Maximum Likelihood Estimation (MLE) # Current progress
-loss.func <- function(parameters){
-  mu <- parameters[1]
-  lambda <- parameters[2]
-  sigma <- parameters[3]
-  sum.one <- row.count/2*log(2*pi*sigma^2*dt)
-  sum.sec <- sum((-diff(interest.rate.data$HIBOR, 1) - lambda*(mu - interest.rate.data$HIBOR[2:row.count])*dt)^2)
-  return(sum.one + sum.sec/(2*sigma^2)*dt)
-}
-opt.sol <- optim(c(1, 1, 1), loss.func)
-
 # SDE Parameters calibrated by OLS
 mu <- b/(1 - a)
 lambda <- (1 - a)/dt
@@ -41,6 +35,7 @@ cat('Estimated mu: ', mu, '\n')
 cat('Estimated lambda: ', lambda, '\n')
 cat('Estimated sigma: ', sigma, '\n')
 
+# Plotting
 plot(interest.rate.data$HIBOR,
      type = 'l', lwd = 2,
      ylab = 'HIBOR Rate',
