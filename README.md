@@ -6,3 +6,4 @@ List:
 4. Price Single Barrier option by analytical formula.
 5. Price Employee Share Options by binomial tree using VBA.
 6. Calibrate the parameters of stochastic differential equation (SDE) of Vasicek model in R by Least square method and MLE.
+7. Price Bermuda style Put Options by binomial tree using VBA.
