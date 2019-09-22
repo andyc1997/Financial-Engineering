@@ -2,15 +2,14 @@ Option Explicit
 Sub Exotic_put_binomial_tree_model()
 'Exercise style: Burmuda
 'Feature: Put
-'Other feature: The proceed gained from selling underlying share held by Grantee are halved.
 
-    Dim d, r, S, K, sigma, up, down, p, backward_price, exercise_price, upside_price, dct_f, decision, v, t, step_size As Double
+    Dim d, r, S, K, sigma, up, down, p, backward_price, exercise_price, dct_f, decision, v, t, step_size As Double
     Dim i, j As Integer
     Dim stock_price_array As Variant
     Dim payoff_array As Variant
     Dim ws_assp As Worksheet
     
-    Set ws_assp = Worksheets("Put (Future)_VIVA") 'Change according to worksheet
+    Set ws_assp = Worksheets("Input") 'Change according to worksheet
     
 '===============================================================================================================
 'Input: Change according to worksheet
@@ -56,31 +55,16 @@ Sub Exotic_put_binomial_tree_model()
         i = 1
         Do
             If j = Int(t / step_size + 1) Then
-                If stock_price_array(i, j) - K > 0 Then
-                    payoff_array(i, j) = -(stock_price_array(i, j) - K) / 2
-                Else
-                    payoff_array(i, j) = K - stock_price_array(i, j)
-                End If
+            'Payoff at terminal
+                payoff_array(i, j) = WorksheetFunction.Max(K - stock_price_array(i, j), 0)
             Else
                 backward_price = dct_f * (p * payoff_array(i, j + 1) + (1 - p) * payoff_array(i + 1, j + 1))
                 exercise_price = K - stock_price_array(i, j)
-                upside_price = (stock_price_array(i, j) - K) / 2
+            'Payoff when the option can be early exercised after time v
                 If (j - 1) * step_size > v Then
-                    decision = WorksheetFunction.Max(backward_price, exercise_price, upside_price)
-                    If decision = upside_price Then
-                        payoff_array(i, j) = -upside_price
-                    ElseIf decision = backward_price Then
-                        payoff_array(i, j) = backward_price
-                    ElseIf decision = exercise_price Then
-                        payoff_array(i, j) = exercise_price
-                    End If
+                    payoff_array(i, j) = WorksheetFunction.Max(backward_price, exercise_price)
                 Else
-                    decision = WorksheetFunction.Max(backward_price, upside_price)
-                    If decision = upside_price Then
-                        payoff_array(i, j) = -upside_price
-                    ElseIf decision = backward_price Then
-                        payoff_array(i, j) = backward_price
-                    End If
+                    payoff_array(i, j) = backward_price
                 End If
             End If
             i = i + 1
