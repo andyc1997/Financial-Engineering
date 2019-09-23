@@ -7,3 +7,4 @@ List:
 5. Price Employee Share Options by binomial tree using VBA.
 6. Calibrate the parameters of stochastic differential equation (SDE) of Vasicek model in R by Least square method and MLE.
 7. Price Bermuda style Put Options by binomial tree using VBA.
+8. Price American style Put Options by trinomial tree using VBA.
