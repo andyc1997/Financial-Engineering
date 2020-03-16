@@ -1,7 +1,4 @@
-
 using Random, Distributions, StatsBase
-
-dim = Dict("m" => 300, "d" => 300);
 
 function counting(m, d)
     return(zeros(m, m, d))
@@ -28,13 +25,6 @@ function buckets_generation(parameters, dim)
     
     return(stock_price_mesh)
 end
-
-# Supposed now that M and e are historical observations of exercise multiples and forfeiture rates
-M = [2.0] # [2.1, 2.2, 2.5, 2.6, 2.8, 2.9]
-e = [0.1] # [0.08, 0.09, 0.095, 0.10, 0.10, 0.11]
-parameters = Dict("S" => 50, "K" => 50,"r" => 0.075, "delta" => 0.025, "sigma" => 0.30, "tau" => 10, 
-    "vest" => 3, "M" => M, "e" => e)
-buckets = buckets_generation(parameters, dim);
 
 function help_map_index(S, buckets)
     # S is a number at j th column 
@@ -114,13 +104,6 @@ function lattice_generation(parameters, buckets, dim, gaussian_rand, trial)
     return(count, count_root)
 end 
 
-trial = 10000
-gaussian_rand_1, gaussian_rand_2 = gaussian_rand(trial, dim)
-
-# Antithetic Variate
-lattice_probability_1, root_probability_1 = lattice_generation(parameters, buckets, dim, gaussian_rand_1, trial);
-lattice_probability_2, root_probability_2 = lattice_generation(parameters, buckets, dim, gaussian_rand_2, trial);
-
 function discounting_process(parameters, buckets, lattice_probability, root_probability, dim)
     # Get Parameters
     S = parameters["S"]
@@ -167,7 +150,3 @@ function discounting_process(parameters, buckets, lattice_probability, root_prob
     
     return(exp(-r * h) *(root_probability * payoff_mesh[:, 1]))
 end 
-
-option_price_1 = discounting_process(parameters, buckets, lattice_probability_1, root_probability_1, dim)
-option_price_2 = discounting_process(parameters, buckets, lattice_probability_2, root_probability_2, dim)
-antithetic_price = 0.5 * (option_price_1 + option_price_2)
