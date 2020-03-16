@@ -150,3 +150,20 @@ function discounting_process(parameters, buckets, lattice_probability, root_prob
     
     return(exp(-r * h) *(root_probability * payoff_mesh[:, 1]))
 end 
+
+function cal_price(parameters, dim)
+    # Complete Model
+    buckets = buckets_generation(parameters, dim);
+    trial = 10000
+    
+    gaussian_rand_1, gaussian_rand_2 = gaussian_rand(trial, dim)
+    lattice_probability_1, root_probability_1 = lattice_generation(parameters, buckets, dim, gaussian_rand_1, trial)
+    lattice_probability_2, root_probability_2 = lattice_generation(parameters, buckets, dim, gaussian_rand_2, trial)
+    
+    # V
+    option_price_1 = discounting_process(parameters, buckets, lattice_probability_1, root_probability_1, dim)
+    option_price_2 = discounting_process(parameters, buckets, lattice_probability_2, root_probability_2, dim)
+    antithetic_price = 0.5 * (option_price_1 + option_price_2)
+    
+    return(antithetic_price)
+end
